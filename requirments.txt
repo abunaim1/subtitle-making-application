@@ -1,5 +1,0 @@
-torch 
-librosa //for audio
-numpy
-transformers
-gradio //making interface for a AI app with this package  

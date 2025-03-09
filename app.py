@@ -10,8 +10,10 @@ model     = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
 
 def transcribe_audio(audio_path):
     try:
-        audio,sampling_rate = librosa.load(audio_path, sampling_rate=16000)
-        input_values = processor(audio, return_tensors='pt', sampling_rate=16000).input_values
+        # 'sr' = 'sampling_rate' 
+        audio, sr = librosa.load(audio_path, sr=16000)
+        
+        input_values = processor(audio, return_tensors='pt', sampling_rate=sr).input_values
 
         with torch.no_grad():
             logits = model(input_values).logits
@@ -23,12 +25,10 @@ def transcribe_audio(audio_path):
         return str(e)
 
 demo = gr.Interface(
-    fn = transcribe_audio,
-    inputs= gr.Audio(type='filepath'),
+    fn=transcribe_audio,
+    inputs=gr.Audio(type='filepath'),
     outputs='text',
-    title="Subtitle Genarator",
-    description="This tool transcribes audio file into text"
+    title="Subtitle Generator",
+    description="This tool transcribes audio files into text"
 )
 demo.launch()
-
-
